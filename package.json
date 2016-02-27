@@ -1,32 +1,29 @@
 {
-  "name": "bootstrap-daterangepicker",
-  "version": "2.1.18",
-  "description": "Date range picker component for Bootstrap",
+  "name": "ga-rangepicker",
+  "version": "1.0",
+  "description": "Date range picker component similar to Google Analytics",
   "main": "daterangepicker.js",
   "style": "daterangepicker.css",
   "scripts": {
-    "scss": "node-sass daterangepicker.scss > daterangepicker.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dangrossman/bootstrap-daterangepicker.git"
+    "url": "https://github.com/jgorunova/ga-rangepicker.git"
   },
   "author": {
-    "name": "Dan Grossman",
-    "email": "dan@dangrossman.info",
-    "url": "http://www.dangrossman.info"
+    "name": "Julia Gorunova",
+    "email": "j.gorunova@gmail.com",
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/dangrossman/bootstrap-daterangepicker/issues"
+    "url": "https://github.com/jgorunova/ga-rangepicker/issues"
   },
-  "homepage": "https://github.com/dangrossman/bootstrap-daterangepicker",
+  "homepage": "https://github.com/jgorunova/ga-rangepicker",
   "dependencies": {
     "jquery": ">=1.10",
     "moment": "^2.9.0"
   },
   "devDependencies": {
-    "node-sass": "^3.4.2"
   }
 }

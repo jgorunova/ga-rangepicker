@@ -1,5 +1,5 @@
 {
-  "name": "bootstrap-daterangepicker",
+  "name": "ga-rangepicker",
   "main": [
     "daterangepicker.js",
     "daterangepicker.css"
