@@ -1,0 +1,29 @@
+{
+  "name": "ga-rangepicker",
+  "version": "1.0",
+  "description": "Date range picker component similar to Google Analytics",
+  "main": "garangepicker.js",
+  "style": "garangepicker.css",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jgorunova/ga-rangepicker.git"
+  },
+  "author": {
+    "name": "Julia Gorunova",
+    "email": "j.gorunova@gmail.com",
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jgorunova/ga-rangepicker/issues"
+  },
+  "homepage": "https://github.com/jgorunova/ga-rangepicker",
+  "dependencies": {
+    "jquery": ">=1.10",
+    "moment": "^2.9.0"
+  },
+  "devDependencies": {
+  }
+}
