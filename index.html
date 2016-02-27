@@ -41,12 +41,11 @@
        </div> <!-- /container -->
        <script>
        $('.example').garangepicker({
-           "startDate": this.startDate,
-           "endDate": this.endDate,
-           //"maxDate": new Date(),
+           "startDate": moment().subtract(6, 'days'),
+           "endDate": moment(),
            "opens": "right",
            "locale": {
-             "format": this.getOption('date_format'),
+             "format": 'YYYY-MM-DD'
          },
      },function(start, end) {
          $('.example-txt').html('Range Selected: ' + start.toLocaleString() + ' - ' + end.toLocaleString());
