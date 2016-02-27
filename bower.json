@@ -1,8 +1,8 @@
 {
   "name": "ga-rangepicker",
   "main": [
-    "daterangepicker.js",
-    "daterangepicker.css"
+    "garangepicker.js",
+    "garangepicker.css"
   ],
   "ignore": [
     "**/.*",

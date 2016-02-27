@@ -2,8 +2,8 @@
   "name": "ga-rangepicker",
   "version": "1.0",
   "description": "Date range picker component similar to Google Analytics",
-  "main": "daterangepicker.js",
-  "style": "daterangepicker.css",
+  "main": "garangepicker.js",
+  "style": "garangepicker.css",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
