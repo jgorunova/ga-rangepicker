@@ -22,25 +22,24 @@
         <div class="container">
 
          <div class="page-header">
-           <h1>GaRangePicker examples</h1>
-           <p class="lead">Basic example.</p>
+           <h1>GaRangePicker -  </h1>
+           <p class="lead">Date range picker component similar to Google Analytics. Minimal config, minimal features, it is what it looks like and nothing more :) </p>
          </div>
 
-         <h3>Three equal columns</h3>
+         <h3>Basic example:</h3>
 
          <div class="row">
            <div class="col-md-4">
-               <div class="input-group">
-                  <span class="input-group-addon glyphicon glyphicon-calendar"></span>
-                  <input type="text" class="form-control" name="example">
-                </div>
-
+                 <input type="text" class="form-control" id="example">
+           </div>
+           <div class="col-md-8">
+               <div id="example-txt" style="padding: 5px 0;">RangePicker is atteched to input. Just click to open it.</div>
            </div>
          </div>
 
        </div> <!-- /container -->
        <script>
-       $('.example').garangepicker({
+       $('#example').garangepicker({
            "startDate": moment().subtract(6, 'days'),
            "endDate": moment(),
            "opens": "right",
@@ -48,7 +47,7 @@
              "format": 'YYYY-MM-DD'
          },
      },function(start, end) {
-         $('.example-txt').html('Range Selected: ' + start.toLocaleString() + ' - ' + end.toLocaleString());
+         $('#example-txt').html('Range Selected: ' + start.toLocaleString() + ' - ' + end.toLocaleString());
      });
        </script>
     </body>
