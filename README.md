@@ -5,7 +5,7 @@
 Features include limiting the selectable date range, localizable strings and date formats,
 and styles that match the default Bootstrap 3 theme.
 
-## [Live Usage Examples](//jgorunova.github.io/ga-rangepicker/)
+## [Live Usage Example](//jgorunova.github.io/ga-rangepicker/)
 
 ## License
 
