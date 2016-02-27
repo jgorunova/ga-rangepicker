@@ -1,6 +1,6 @@
 # Date Range Picker for Bootstrap
 
-![demo](//raw.githubusercontent.com/jgorunova/ga-rangepicker/master/demo.png)
+![demo.png](demo.png)
 
 Features include limiting the selectable date range, localizable strings and date formats,
 and styles that match the default Bootstrap 3 theme.
