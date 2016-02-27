@@ -1,1 +1,56 @@
-My Page
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Date Range Picker for Bootstrap</title>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <script src="moment.min.js"></script>
+
+        <script src="garangepicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="garangepicker.css" />
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body>
+        <div class="container">
+
+         <div class="page-header">
+           <h1>GaRangePicker examples</h1>
+           <p class="lead">Basic example.</p>
+         </div>
+
+         <h3>Three equal columns</h3>
+
+         <div class="row">
+           <div class="col-md-4">
+               <div class="input-group">
+                  <span class="input-group-addon glyphicon glyphicon-calendar"></span>
+                  <input type="text" class="form-control" name="example">
+                </div>
+
+           </div>
+         </div>
+
+       </div> <!-- /container -->
+       <script>
+       $('.example').garangepicker({
+           "startDate": this.startDate,
+           "endDate": this.endDate,
+           //"maxDate": new Date(),
+           "opens": "right",
+           "locale": {
+             "format": this.getOption('date_format'),
+         },
+     },function(start, end) {
+         $('.example-txt').html('Range Selected: ' + start.toLocaleString() + ' - ' + end.toLocaleString());
+     });
+       </script>
+    </body>
+</html>
