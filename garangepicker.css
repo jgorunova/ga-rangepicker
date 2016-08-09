@@ -171,14 +171,16 @@
   font-size: 12px !important;
 }
 
-.garangepicker td.off, .garangepicker td.off.in-range, .garangepicker td.off.start-date, .garangepicker td.off.end-date {
-  color: #999;
+.garangepicker td.off.available, .garangepicker td.off.in-range, .garangepicker td.off.start-date, .garangepicker td.off.end-date {
+  color: #aaa;
   background: #fff;
-  visibility: hidden;
+
 }
 
 .garangepicker td.disabled, .garangepicker option.disabled {
-  color: #999;
+  color: #aaa !important;
+  opacity: 0.5 !important;
+  background-color: white !important;
 }
 
 .garangepicker td.available:hover, .garangepicker th.available:hover {
