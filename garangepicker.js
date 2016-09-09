@@ -120,7 +120,10 @@
                     '<i class="fa fa-clock-o glyphicon glyphicon-time"></i>' +
                   '</div>' +
                 '</div>' +
-
+                '<div class="fastlinks">' +
+                '<a class="today">Today</a>     <a class="month">This Month</a><br>' +
+                '<a class="week">This Week</a>  <a class="3monthes">Last 3 Monthes</a><br><br>'+
+                '</div>' +
                 '<div class="range_inputs">' +
                     '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
                     '<button class="cancelBtn" type="button"></button>' +
@@ -307,6 +310,11 @@
             .on('.garangepicker_input input', $.proxy(this.formInputsChanged, this))
             .on('click.garangepicker_input input', $.proxy(this.formInputFocused, this));
 
+        this.container.find('.fastlinks')
+            .on('click', '.today', $.proxy(this.setToday, this))
+            .on('click', '.week', $.proxy(this.setLastWeek, this))
+            .on('click', '.month', $.proxy(this.setLastMonth, this))
+            .on('click', '.3monthes', $.proxy(this.setLast3Monthes, this));
         //this.container.find('name=[garangepicker_start]')
 
 
@@ -409,26 +417,25 @@
             if (this.endDate) {
 
                 //if both dates are visible already, do nothing
-                if (this.leftCalendar.month && this.middleCalendar.month &&
+                if (this.leftCalendar.month && this.middleCalendar.month && this.rightCalendar.month &&
                     (this.startDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') ||
                     this.startDate.format('YYYY-MM') == this.middleCalendar.month.format('YYYY-MM') ||
-                    this.startDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
-                    &&
-                    (this.endDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') ||
+                    this.startDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM') ||
+                    this.endDate.format('YYYY-MM') == this.leftCalendar.month.format('YYYY-MM') ||
                     this.endDate.format('YYYY-MM') == this.middleCalendar.month.format('YYYY-MM') ||
                     this.endDate.format('YYYY-MM') == this.rightCalendar.month.format('YYYY-MM'))
                     ) {
                     return;
                 }
 
-                this.leftCalendar.month = this.startDate.clone().date(2);
-                this.middleCalendar.month = this.startDate.clone().date(2).add(1, 'month');
-                this.rightCalendar.month = this.startDate.clone().date(2).add(2, 'month');
-
+                this.leftCalendar.month = this.endDate.clone().date(2).subtract(2, 'month');
+                this.middleCalendar.month = this.endDate.clone().date(2).subtract(1, 'month');
+                this.rightCalendar.month = this.endDate.clone().date(2); //.add(2, 'month');
             } else {
-                if (this.leftCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') &&
-                    this.middleCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM') &&
-                    this.rightCalendar.month.format('YYYY-MM') != this.startDate.format('YYYY-MM')) {
+                if (this.leftCalendar.month.format('YYYY-MM') != this.endDate.format('YYYY-MM') &&
+                    this.middleCalendar.month.format('YYYY-MM') != this.endDate.format('YYYY-MM') &&
+                    this.rightCalendar.month.format('YYYY-MM') != this.endDate.format('YYYY-MM')) {
+
                     this.leftCalendar.month = this.startDate.clone().date(2);
                     this.middleCalendar.month = this.startDate.clone().date(2).add(1, 'month');
                     this.rightCalendar.month = this.startDate.clone().date(2).add(2, 'month');
@@ -475,7 +482,7 @@
             calendar.firstDay = firstDay;
             calendar.lastDay = lastDay;
 
-            for (var i = 0; i < 6; i++) {
+            for (var i = 0; i < 7; i++) {
                 calendar[i] = [];
             }
 
@@ -491,13 +498,14 @@
             var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]).utcOffset(this.timeZone); // .utcOffset(this.timeZone);
 
             var col, row;
-            for (var i = 0, col = 0, row = 0; i < 42; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
+            for (var i = 0, col = 0, row = 0; i < 49; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
                 if (i > 0 && col % 7 === 0) {
                     col = 0;
                     row++;
                 }
-                calendar[row][col] = curDate.clone().hour(hour).minute(minute).second(second);
                 curDate.hour(12);
+                calendar[row][col] = curDate.clone();//.hour(hour).minute(minute).second(second);
+
 
                 if (this.minDate && calendar[row][col].format('YYYY-MM-DD') == this.minDate.format('YYYY-MM-DD') && calendar[row][col].isBefore(this.minDate) && side == 'left') {
                     calendar[row][col] = this.minDate.clone();
@@ -510,9 +518,9 @@
             }
             if(calendar[0][6].month() != calendar[1][0].month()) {
                 calendar.shift();
-            } else {
+            }/* else if(calendar[5][0].month() != calendar[1][0].month()) {
                 calendar.length -= 1;
-            }
+            }*/
 
             //make the calendar object available to hoverDate/clickDate
             if (side == 'left') {
@@ -570,7 +578,7 @@
                 }
             }
 
-            for (var row = 0; row < 5; row++) {
+            for (var row = 0; row < 6; row++) {
                 html += '<tr>';
 
                 for (var col = 0; col < 7; col++) {
@@ -587,7 +595,7 @@
 
                     //grey out the dates in other months displayed at beginning and end of this calendar
                     if (calendar[row][col].month() != calendar[1][1].month())
-                        classes.push('off');
+                        classes.push('off', 'disabled');
 
                     //don't allow selection of dates before the minimum date
                     if (this.minDate && calendar[row][col].isBefore(this.minDate, 'day'))
@@ -903,9 +911,43 @@
                 this.setEndDate(date.clone());
                 this.activeDate = 'start';
             }
+            this.updateView();
+        },
 
+        setToday: function(e) {
+            e.preventDefault();
+            var start_dt = new Date(),
+                end_dt = new Date();
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
+            this.updateView();
 
+            //this.clickApply();
+        },
 
+        setLastWeek: function(e) {
+            e.preventDefault();
+            var end_dt = moment(new Date()),
+                start_dt = moment(new Date()).startOf('week');
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
+            this.updateView();
+        },
+
+        setLastMonth: function(e) {
+            e.preventDefault();
+            var end_dt = moment(new Date()),
+                start_dt = moment(new Date()).startOf('month');
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
+            this.updateView();
+        },
+
+        setLast3Monthes: function(e) {
+            var end_dt = moment(new Date()),
+                start_dt = moment(new Date()).subtract(2, 'months').startOf('month');
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
             this.updateView();
         },
 
