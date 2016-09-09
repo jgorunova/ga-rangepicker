@@ -253,3 +253,10 @@
 .garangepicker .ranges {
   font-size: 11px;
 }
+.garangepicker .fastlinks a {
+    width: 70px;
+    display: inline-block;
+}
+.garangepicker .fastlinks a:hover {
+    text-decoration: underline;
+}

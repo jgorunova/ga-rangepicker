@@ -120,7 +120,10 @@
                     '<i class="fa fa-clock-o glyphicon glyphicon-time"></i>' +
                   '</div>' +
                 '</div>' +
-
+                '<div class="fastlinks">' +
+                '<a class="today">Today</a>     <a class="month">This Month</a><br>' +
+                '<a class="week">This Week</a>  <a class="3monthes">Last 3 Monthes</a><br><br>'+
+                '</div>' +
                 '<div class="range_inputs">' +
                     '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
                     '<button class="cancelBtn" type="button"></button>' +
@@ -307,6 +310,11 @@
             .on('.garangepicker_input input', $.proxy(this.formInputsChanged, this))
             .on('click.garangepicker_input input', $.proxy(this.formInputFocused, this));
 
+        this.container.find('.fastlinks')
+            .on('click', '.today', $.proxy(this.setToday, this))
+            .on('click', '.week', $.proxy(this.setLastWeek, this))
+            .on('click', '.month', $.proxy(this.setLastMonth, this))
+            .on('click', '.3monthes', $.proxy(this.setLast3Monthes, this));
         //this.container.find('name=[garangepicker_start]')
 
 
@@ -903,9 +911,43 @@
                 this.setEndDate(date.clone());
                 this.activeDate = 'start';
             }
+            this.updateView();
+        },
 
+        setToday: function(e) {
+            e.preventDefault();
+            var start_dt = new Date(),
+                end_dt = new Date();
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
+            this.updateView();
 
+            //this.clickApply();
+        },
 
+        setLastWeek: function(e) {
+            e.preventDefault();
+            var end_dt = moment(new Date()),
+                start_dt = moment(new Date()).startOf('week');
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
+            this.updateView();
+        },
+
+        setLastMonth: function(e) {
+            e.preventDefault();
+            var end_dt = moment(new Date()),
+                start_dt = moment(new Date()).startOf('month');
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
+            this.updateView();
+        },
+
+        setLast3Monthes: function(e) {
+            var end_dt = moment(new Date()),
+                start_dt = moment(new Date()).subtract(2, 'months').startOf('month');
+            this.setStartDate(start_dt);
+            this.setEndDate(end_dt);
             this.updateView();
         },
 
