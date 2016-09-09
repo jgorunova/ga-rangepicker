@@ -254,8 +254,9 @@
   font-size: 11px;
 }
 .garangepicker .fastlinks a {
-    width: 70px;
+    width: 90px;
     display: inline-block;
+    cursor: pointer;
 }
 .garangepicker .fastlinks a:hover {
     text-decoration: underline;
