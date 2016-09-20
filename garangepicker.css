@@ -160,7 +160,7 @@
   margin: 0;
 }
 
-.garangepicker td, .garangepicker th {
+.garangepicker  .calendar td, .garangepicker  .calendar th {
   text-align: center;
   width: 20px;
   height: 20px;
@@ -171,51 +171,55 @@
   font-size: 12px !important;
 }
 
-.garangepicker td.off.available, .garangepicker td.off.in-range, .garangepicker td.off.start-date, .garangepicker td.off.end-date {
+.garangepicker  .calendar td.off.available,
+.garangepicker  .calendar td.off.in-range,
+.garangepicker  .calendar td.off.start-date,
+.garangepicker  .calendar td.off.end-date {
   color: #aaa;
   background: #fff;
 
 }
 
-.garangepicker td.disabled, .garangepicker option.disabled {
+.garangepicker  .calendar td.disabled,
+.garangepicker option.disabled {
   color: #aaa !important;
   opacity: 0.5 !important;
   background-color: white !important;
 }
 
-.garangepicker td.available:hover, .garangepicker th.available:hover {
+.garangepicker  .calendar td.available:hover, .garangepicker  .calendar th.available:hover {
   background: #eee;
 }
 
-.garangepicker td.in-range {
+.garangepicker  .calendar td.in-range {
   background: #ebf4f8;
   border-radius: 0;
 }
 
-.garangepicker td.start-date {
+.garangepicker  .calendar td.start-date {
   border-radius: 4px 0 0 4px;
 }
 
-.garangepicker td.end-date {
+.garangepicker  .calendar td.end-date {
   border-radius: 0 4px 4px 0;
 }
 
-.garangepicker td.start-date.end-date {
+.garangepicker  .calendar td.start-date.end-date {
   border-radius: 4px;
 }
 
-.garangepicker td.active, .garangepicker td.active:hover {
+.garangepicker  .calendar td.active, .garangepicker  .calendar td.active:hover {
   background-color: #357ebd;
   border-color: #3071a9;
   color: #fff;
 }
 
-.garangepicker td.week, .garangepicker th.week {
+.garangepicker  .calendar td.week, .garangepicker  .calendar th.week {
   font-size: 80%;
   color: #ccc;
 }
 
-.garangepicker th.month {
+.garangepicker  .calendar th.month {
   width: auto;
 }
 
@@ -281,9 +285,9 @@
 .garangepicker .ranges {
   font-size: 11px;
 }
-.garangepicker .fastlinks a {
-    width: 70px;
-    display: inline-block;
+.garangepicker .fastlinks, .garangepicker .fastlinks td {
+    border:none;
+    text-align: left;
 }
 .garangepicker .fastlinks a:hover {
     text-decoration: underline;
