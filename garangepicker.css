@@ -221,7 +221,7 @@
 
 /* Text Input Above Each Calendar */
 
-.garangepicker .input-mini {
+.garangepicker .input-mini, .garangepicker select {
   border: 1px solid #ccc;
   border-radius: 4px;
   color: #555;
@@ -231,9 +231,19 @@
   vertical-align: middle;
   margin: 0 0 5px 0;
   padding: 0 6px 0 28px;
-  width: 100%;
+  float: left;
+  outline: none;
 }
+.garangepicker select.gahour {
+    margin-left: 10px;
+}
+.garangepicker select.gaminute {
 
+}
+.garangepicker span.gadivider {
+    float: left;
+    line-height: 30px;
+}
 .garangepicker .input-mini.active {
   border: 1px solid #357ebd;
 }
@@ -246,17 +256,34 @@
 
 .garangepicker .garangepicker_input {
   position: relative;
+  overflow: auto;
+}
+.garangepicker .garangepicker_time {
+    display: none;
 }
 
+
+
+.garangepicker.with-time .garangepicker_input {
+  width: 200px;
+}
+.garangepicker.with-time .garangepicker_input input{
+  width: 100px;
+}
+.garangepicker.with-time .garangepicker_time {
+    display: block;
+}
+.garangepicker.with-time .garangepicker_time i {
+  left: 110px;
+}
 /* Predefined Ranges */
 
 .garangepicker .ranges {
   font-size: 11px;
 }
 .garangepicker .fastlinks a {
-    width: 90px;
+    width: 70px;
     display: inline-block;
-    cursor: pointer;
 }
 .garangepicker .fastlinks a:hover {
     text-decoration: underline;

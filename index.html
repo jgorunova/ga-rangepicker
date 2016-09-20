@@ -40,11 +40,13 @@
        </div> <!-- /container -->
        <script>
        $('#example').garangepicker({
-           "startDate": moment().subtract(6, 'days'),
+           "startDate": moment().subtract(6, 'days').startOf('day'),
            "endDate": moment(),
            "opens": "right",
+           "showTime": true,
            "locale": {
-             "format": 'YYYY-MM-DD'
+             "format": 'YYYY-MM-DD HH:SS',
+             "dateFormat": 'YYYY-MM-DD',
          },
      },function(start, end) {
          $('#example-txt').html('Range Selected: ' + start.toLocaleString() + ' - ' + end.toLocaleString());
