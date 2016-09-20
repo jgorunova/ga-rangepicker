@@ -124,10 +124,15 @@
                     '<select class="gaminute" name="minute_end"></select>' +
                   '</div>' +
                 '</div>' +
-                '<div class="fastlinks">' +
-                '<a class="today">Today</a>     <a class="month">This Month</a><br>' +
-                '<a class="week">This Week</a>  <a class="3months">Last 3 Months</a><br><br>'+
-                '</div>' +
+                '<table class="fastlinks">' +
+                '<tr>' +
+                  '<td><a class="today">Today</a></td><td><a class="month">This Month</a></td>' +
+                 '</tr>' +
+                 '<tr>' +
+                   '<td><a class="week">This Week</a></td><td><a class="3months">Last 3 Months</a></td>' +
+                  '</tr>' +
+                '</table>' +
+                '<br>' +
                 '<div class="range_inputs">' +
                     '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
                     '<button class="cancelBtn" type="button"></button>' +
