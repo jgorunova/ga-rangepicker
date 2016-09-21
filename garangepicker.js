@@ -34,7 +34,6 @@
 }(this, function(root, garangepicker, moment, $) {
 
     var GaRangePicker = function(element, options, cb) {
-
         //default settings for options
         this.parentEl = 'body';
         this.element = $(element);
@@ -43,7 +42,6 @@
         this.timeZone = moment().utcOffset();
         this.minDate = false;
         this.maxDate = false;
-        this.dateLimit = false;
         this.autoUpdateInput = true;
         this.showTime = false;
 
@@ -143,12 +141,16 @@
         this.parentEl = (options.parentEl && $(options.parentEl).length) ? $(options.parentEl) : $(this.parentEl);
         this.container = $(options.template).appendTo(this.parentEl);
 
-        //
-        // handle all the possible options overriding defaults
-        //
+        // bind the time zone used to build the calendar to either the timeZone passed in through the options or the zone of the startDate (which will be the local time zone by default)
+        if (typeof options.timeZone === 'string' || typeof options.timeZone === 'number') {
+            if (typeof options.timeZone === 'string' && typeof moment.tz !== 'undefined') {
+                this.timeZone = moment.tz.zone(options.timeZone).parse(new Date) * -1;  // Offset is positive if the timezone is behind UTC and negative if it is ahead.
+            } else {
+                this.timeZone = options.timeZone;
+            }
+        }
 
         if (typeof options.locale === 'object') {
-
             if (typeof options.locale.format === 'string')
                 this.locale.format = options.locale.format;
 
@@ -183,10 +185,10 @@
         }
 
         if (typeof options.startDate === 'string')
-            this.setStartDate(moment(options.startDate, this.locale.format));
+            this.startDate = moment(options.startDate, this.locale.format);
 
         if (typeof options.endDate === 'string')
-            this.setEndDate(moment(options.endDate, this.locale.format));
+            this.endDate = moment(options.endDate, this.locale.format);
 
         if (typeof options.minDate === 'string')
             this.minDate = moment(options.minDate, this.locale.format);
@@ -195,10 +197,10 @@
             this.maxDate = moment(options.maxDate, this.locale.format);
 
         if (typeof options.startDate === 'object')
-            this.setStartDate(moment(options.startDate));
+            this.startDate = moment(options.startDate);
 
         if (typeof options.endDate === 'object')
-            this.setEndDate(moment(options.endDate));
+            this.endDate = moment(options.endDate);
 
         if (typeof options.minDate === 'object')
             this.minDate = moment(options.minDate);
@@ -223,9 +225,6 @@
         if (typeof options.cancelClass === 'string')
             this.cancelClass = options.cancelClass;
 
-        if (typeof options.dateLimit === 'object')
-            this.dateLimit = options.dateLimit;
-
         if (typeof options.opens === 'string')
             this.opens = options.opens;
 
@@ -243,6 +242,15 @@
 
         if (typeof options.isInvalidDate === 'function')
             this.isInvalidDate = options.isInvalidDate;
+
+        // set timezones
+        this.startDate && this.startDate.utcOffset(this.timeZone);
+        this.endDate && this.endDate.utcOffset(this.timeZone);
+        this.minDate && this.minDate.utcOffset(this.timeZone);
+        this.maxDate && this.maxDate.utcOffset(this.timeZone);
+
+        this.setStartDate(this.startDate);
+        this.setEndDate(this.endDate);
 
         // update day names order to firstDay
         if (this.locale.firstDay != 0) {
@@ -312,7 +320,6 @@
             .on('click', '.week', $.proxy(this.setLastWeek, this))
             .on('click', '.month', $.proxy(this.setLastMonth, this))
             .on('click', '.3months', $.proxy(this.setLast3Months, this));
-        //this.container.find('name=[garangepicker_start]')
 
         if (this.element.is('input')) {
             this.element.on({
@@ -344,16 +351,15 @@
 
         setStartDate: function(startDate) {
             if (typeof startDate === 'string')
-                this.startDate = moment(startDate, this.locale.format).utcOffset(this.timeZone);
+                startDate = moment(startDate, this.locale.format).utcOffset(this.timeZone);
 
             if (typeof startDate === 'object')
-                this.startDate = moment(startDate);
+                startDate = moment(startDate.clone()).utcOffset(this.timeZone);
 
-            //this.startDate = this.startDate.startOf('day');
-            var new_date = this.startDate.clone();
+            this.startDate = startDate.clone();
             this.startDate.startOf('day');
-            this.startDate.hours(new_date.hours());
-            this.startDate.minutes(new_date.minutes());
+            this.startDate.hours(startDate.hours());
+            this.startDate.minutes(startDate.minutes());
 
             if (this.minDate && this.startDate.isBefore(this.minDate))
                 this.startDate = this.minDate;
@@ -370,26 +376,21 @@
 
         setEndDate: function(endDate) {
             if (typeof endDate === 'string')
-                this.endDate = moment(endDate, this.locale.format).utcOffset(this.timeZone);
+                endDate = moment(endDate, this.locale.format).utcOffset(this.timeZone);
 
             if (typeof endDate === 'object')
-                this.endDate = moment(endDate);
+                endDate = moment(endDate.clone()).utcOffset(this.timeZone);;
 
-            //this.endDate = this.endDate.endOf('day');
+            this.endDate = endDate.clone();
+            this.endDate.endOf('day');
+            this.endDate.hours(endDate.hours());
+            this.endDate.minutes(endDate.minutes());
 
             if (this.endDate.isBefore(this.startDate))
                 this.endDate = this.startDate.clone();
 
-            var new_date = this.endDate.clone();
-            this.endDate.endOf('day');
-            this.endDate.hours(new_date.hours());
-            this.endDate.minutes(new_date.minutes());
-
             if (this.maxDate && this.endDate.isAfter(this.maxDate))
                 this.endDate = this.maxDate;
-
-            if (this.dateLimit && this.startDate.clone().add(this.dateLimit).isBefore(this.endDate))
-                this.endDate = this.startDate.clone().add(this.dateLimit);
 
             if (!this.isShowing)
                 this.updateElement();
@@ -455,10 +456,6 @@
         },
 
         renderCalendar: function(side) {
-
-            //
-            // Build the matrix of dates that will populate the calendar
-            //
             var calendar;
             if(side == 'left') {
                 calendar = this.leftCalendar;
@@ -470,12 +467,9 @@
 
             var month = calendar.month.month();
             var year = calendar.month.year();
-            var hour = calendar.month.hour();
-            var minute = calendar.month.minute();
-            var second = calendar.month.second();
             var daysInMonth = moment([year, month]).daysInMonth();
-            var firstDay = moment([year, month, 1]);
-            var lastDay = moment([year, month, daysInMonth]);
+            var firstDay = moment([year, month, 1]).utcOffset(this.timeZone, true);
+            var lastDay = moment([year, month, daysInMonth]).utcOffset(this.timeZone, true);
             var lastMonth = moment(firstDay).subtract(1, 'month').month();
             var lastYear = moment(firstDay).subtract(1, 'month').year();
             var daysInLastMonth = moment([lastYear, lastMonth]).daysInMonth();
@@ -498,8 +492,7 @@
             if (dayOfWeek == this.locale.firstDay)
                 startDay = daysInLastMonth - 6;
 
-            // Possible patch for issue #626 https://github.com/dangrossman/bootstrap-garangepicker/issues/626
-            var curDate = moment([lastYear, lastMonth, startDay, 12, minute, second]).utcOffset(this.timeZone); // .utcOffset(this.timeZone);
+            var curDate = moment([lastYear, lastMonth, startDay, 0, 0, 0]).utcOffset(this.timeZone, true);
 
             var col, row;
             for (var i = 0, col = 0, row = 0; i < 49; i++, col++, curDate = moment(curDate).add(24, 'hour')) {
@@ -507,9 +500,7 @@
                     col = 0;
                     row++;
                 }
-                curDate.hour(12);
-                calendar[row][col] = curDate.clone();//.hour(hour).minute(minute).second(second);
-
+                calendar[row][col] = curDate.clone();
 
                 if (this.minDate && calendar[row][col].format('YYYY-MM-DD') == this.minDate.format('YYYY-MM-DD') && calendar[row][col].isBefore(this.minDate) && side == 'left') {
                     calendar[row][col] = this.minDate.clone();
@@ -518,14 +509,10 @@
                 if (this.maxDate && calendar[row][col].format('YYYY-MM-DD') == this.maxDate.format('YYYY-MM-DD') && calendar[row][col].isAfter(this.maxDate) && side == 'middle') {
                     calendar[row][col] = this.maxDate.clone();
                 }
-
             }
             if(calendar[0][6].month() != calendar[1][0].month()) {
                 calendar.shift();
-            }/* else if(calendar[5][0].month() != calendar[1][0].month()) {
-                calendar.length -= 1;
-            }*/
-
+            }
             //make the calendar object available to hoverDate/clickDate
             if (side == 'left') {
                 this.leftCalendar.calendar = calendar;
@@ -535,10 +522,7 @@
                 this.rightCalendar.calendar = calendar;
             }
 
-            //
             // Display the calendar
-            //
-
             var minDate = side == 'left' ? this.minDate : this.startDate;
             var maxDate = this.maxDate;
             var selected = side == 'left' ? this.startDate : this.endDate;
@@ -572,15 +556,6 @@
             html += '</tr>';
             html += '</thead>';
             html += '<tbody>';
-
-            //adjust maxDate to reflect the dateLimit setting in order to
-            //grey out end dates beyond the dateLimit
-            if (this.endDate == null && this.dateLimit) {
-                var maxLimit = this.startDate.clone().add(this.dateLimit).endOf('day');
-                if (!maxDate || maxLimit.isBefore(maxDate)) {
-                    maxDate = maxLimit;
-                }
-            }
 
             for (var row = 0; row < 6; row++) {
                 html += '<tr>';
@@ -644,13 +619,10 @@
             html += '</table>';
 
             this.container.find('.calendar.' + side + ' .calendar-table').html(html);
-
         },
 
         updateFormInputs: function() {
-
             //ignore mouse movements while an above-calendar text input has focus
-
             this.container.find('input[name=garangepicker_start]').val(this.startDate.format(this.locale.dateFormat));
             this.container.find('select[name=hour_start]').val(this.startDate.hours());
             this.container.find('select[name=minute_start]').val(this.startDate.minutes());
@@ -929,8 +901,8 @@
 
         setToday: function(e) {
             e.preventDefault();
-            var start_dt = moment(new Date()).startOf('day'),
-                end_dt = moment(new Date()).endOf('day');
+            var start_dt = moment().utcOffset(this.timeZone).startOf('day'),
+                end_dt = moment().utcOffset(this.timeZone).endOf('day');
             this.setStartDate(start_dt);
             this.setEndDate(end_dt);
             this.updateView();
@@ -940,8 +912,8 @@
 
         setLastWeek: function(e) {
             e.preventDefault();
-            var end_dt = moment(new Date()).endOf('day'),
-                start_dt = moment(new Date()).startOf('week');
+            var end_dt = moment().utcOffset(this.timeZone).endOf('day'),
+                start_dt = moment().utcOffset(this.timeZone).startOf('week');
             this.setStartDate(start_dt);
             this.setEndDate(end_dt);
             this.updateView();
@@ -949,16 +921,16 @@
 
         setLastMonth: function(e) {
             e.preventDefault();
-            var end_dt = moment(new Date()).endOf('day'),
-                start_dt = moment(new Date()).startOf('month');
+            var end_dt = moment().utcOffset(this.timeZone).endOf('day'),
+                start_dt = moment().utcOffset(this.timeZone).startOf('month');
             this.setStartDate(start_dt);
             this.setEndDate(end_dt);
             this.updateView();
         },
 
         setLast3Months: function(e) {
-            var end_dt = moment(new Date()).endOf('day'),
-                start_dt = moment(new Date()).subtract(2, 'months').startOf('month');
+            var end_dt =  moment().utcOffset(this.timeZone).endOf('day'),
+                start_dt =  moment().utcOffset(this.timeZone).subtract(2, 'months').startOf('month');
             this.setStartDate(start_dt);
             this.setEndDate(end_dt);
             this.updateView();
@@ -978,8 +950,8 @@
 
         formInputsChanged: function(e) {
             var isRight = $(e.target).attr('name') == 'garangepicker_end';
-            var start = moment(this.container.find('input[name="garangepicker_start"]').val(), this.locale.dateFormat).utcOffset(this.timeZone);
-            var end = moment(this.container.find('input[name="garangepicker_end"]').val(), this.locale.dateFormat).utcOffset(this.timeZone);
+            var start = moment(this.container.find('input[name="garangepicker_start"]').val(), this.locale.dateFormat).utcOffset(this.timeZone, true);
+            var end = moment(this.container.find('input[name="garangepicker_end"]').val(), this.locale.dateFormat).utcOffset(this.timeZone, true);
             if (!start.isValid()) {
                 this.container.find('input[name="garangepicker_start"]').addClass('has_errors');
             } else {
@@ -1013,7 +985,6 @@
                 }
 
             }
-
             this.updateCalendars();
         },
 
@@ -1039,12 +1010,12 @@
                 end = null;
 
             if (dateString.length === 2) {
-                start = moment(dateString[0], this.locale.format).utcOffset(this.timeZone);
-                end = moment(dateString[1], this.locale.format).utcOffset(this.timeZone);
+                start = moment(dateString[0], this.locale.format).utcOffset(this.timeZone, true);
+                end = moment(dateString[1], this.locale.format).utcOffset(this.timeZone, true);
             }
 
             if (start === null || end === null) {
-                start = moment(this.element.val(), this.locale.format).utcOffset(this.timeZone);
+                start = moment(this.element.val(), this.locale.format).utcOffset(this.timeZone, true);
                 end = start;
             }
             this.setStartDate(start);
