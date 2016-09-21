@@ -261,8 +261,9 @@
             }
         }
 
-        // update hours select
         var html, num;
+        // update hours select
+        html='';
         for (var i = 0; i <= 23; i++) {
             num = i + '';
             num = (num.length == 1) ? '0'+num : num;
@@ -272,7 +273,7 @@
         this.container.find('select[name="hour_end"]').html(html);
 
         // update minutes select
-        var html, num;
+        html='';
         for (var i = 0; i <= 59; i++) {
             num = i + '';
             num = (num.length == 1) ? '0'+num : num;
